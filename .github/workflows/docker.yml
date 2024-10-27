@@ -1,0 +1,48 @@
+name: Multi-Container Docker
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # Optional: You can check Docker version and info
+    steps:
+      - name: Check Docker version
+        run: docker --version
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t anshultaklikar/multicontainer-docker -f ./client/Dockerfile.dev ./client
+
+      - name: Run tests inside Docker container
+        run: docker run -e CI=true anshultaklikar/multicontainer-docker npm run test -- --coverage
+
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout source code
+  #       uses: actions/checkout@v2
+
+  #     - name: Generate deployment package
+  #       run: zip -r deploy.zip . -x '*.git*'
+      
+  #     - name: Deploy to EB
+  #       uses: einaregilsson/beanstalk-deploy@v21
+  #       with:
+  #         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         application_name: MyApplicationName
+  #         environment_name: MyApplication-Environment
+  #         version_label: ${{ github.sha }}
+  #         existing_bucket_name: MyBucketName
+  #         region: us-west-2
+  #         deployment_package: deploy.zip
