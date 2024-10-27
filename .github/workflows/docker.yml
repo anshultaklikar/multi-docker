@@ -39,16 +39,18 @@ jobs:
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Build Docker images
-        run: docker build -t anshultaklikar/multi-client ./client
-        run: docker build -t anshultaklikar/multi-nginx ./nginx
-        run: docker build -t anshultaklikar/multi-server ./server
-        run: docker build -t anshultaklikar/multi-worker ./worker 
+        run: |
+          docker build -t anshultaklikar/multi-client:latest ./client
+          docker build -t anshultaklikar/multi-nginx:latest ./nginx
+          docker build -t anshultaklikar/multi-server:latest ./server
+          docker build -t anshultaklikar/multi-worker:latest ./worker
       
       - name: Push to Docker hub
-        run: docker push anshultaklikar/multi-client:latest
-        run: docker push anshultaklikar/multi-nginx:latest
-        run: docker push anshultaklikar/multi-server:latest
-        run: docker push anshultaklikar/multi-worker:latest
+        run: |
+          docker push anshultaklikar/multi-client:latest
+          docker push anshultaklikar/multi-nginx:latest
+          docker push anshultaklikar/multi-server:latest
+          docker push anshultaklikar/multi-worker:latest
 
       # - name: Generate deployment package
       #   run: zip -r deploy.zip . -x '*.git*'
